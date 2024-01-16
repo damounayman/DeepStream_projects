@@ -1,0 +1,3 @@
+[submodule "community/NV_DeepstreamSDK_Excercise"]
+	path = community/NV_DeepstreamSDK_Excercise
+	url = https://github.com/damounayman/NV_DeepstreamSDK_Excercise
