@@ -1,28 +1,48 @@
 #pragma once
 
-#include <librealsense2/rs.hpp>
-#include <gst/gst.h>
 #include <gst/app/gstappsrc.h>
+#include <gst/gst.h>
+#include <librealsense2/rs.hpp>
+#include <opencv2/opencv.hpp>
+
+#include <gst/rtsp-server/rtsp-server.h>
+#include <gst/rtsp/gstrtspconnection.h>
 
 class GstRgbdServer {
 public:
-    GstRgbdServer();
-    ~GstRgbdServer();
+  GstRgbdServer();
+  ~GstRgbdServer();
 
-    void startStreaming();
-    void stopStreaming();
+  void stream();
+  void stopStreaming();
+  void update();
+  void onNeedData(GstElement *element, guint size);
 
 private:
-    static GstFlowReturn newSample(GstElement* appsrc, gpointer user_data);
-    void initializePipeline();
-    void cleanup();
+  void initializeRealsense();
+  rs2::align alignmentFilter_{RS2_STREAM_COLOR};
+  rs2::pipeline rsPipeline_;
+  rs2::config rsPipelineConfig_;
+  rs2::frame_queue imuQueue_;
+  rs2::frame_queue frameQueue_;
+  rs2::depth_sensor *depthSensor_;
+  rs2::device device_;
+  double scale_;
+  rs2::threshold_filter threshold_filter_;
 
-    rs2::pipeline pipeline;
-    GstElement* gstPipeline;
-    GstElement* appsrc;
-    GstElement* videosink;
-    GMainLoop* mainLoop;
+  int32_t fps_{30};
+  int width_ = 1280;
+  int height_ = 720;
 
-    // Forward declaration of startMainLoop
-    static void startMainLoop(GstRgbdServer* server);
+  rs2::frame colorFrame_;
+
+  GMainLoop *gsLoop_;
+  GstRTSPServer *gsServer_;
+  GstRTSPMountPoints *gsMounts_;
+  GstRTSPMediaFactory *gsFactory_;
+  GOptionContext *gsOptctx_;
+  GError *gsError_ = NULL;
+
+  const gchar *port = (char *)"8554";
+  const gchar *host = (char *)"127.0.0.1";
 };

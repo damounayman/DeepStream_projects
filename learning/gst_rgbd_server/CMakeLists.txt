@@ -63,6 +63,10 @@ add_executable(${PROJECT_NAME}
     src/main.cc
 )
 
+add_executable(test_me
+    src/test_me.cc
+)
+
 target_link_libraries(${PROJECT_NAME}
     ${GST_LIBRARIES}
     ${GSTAPP_LIBRARIES}
@@ -78,3 +82,38 @@ target_link_libraries(${PROJECT_NAME}
     nvds_utils
 )
 
+
+target_link_libraries(test_me
+    ${GST_LIBRARIES}
+    ${GSTAPP_LIBRARIES}
+    ${GSTRTSP_LIBRARIES}  # Added this line
+    ${GLIB_LIBRARIES}
+    ${GFLAGS_LIBRARIES}
+    ${JSONCPP_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    ${realsense2_LIBRARY}
+    nvbufsurface
+    nvdsgst_meta
+    nvds_meta
+    nvds_utils
+)
+
+
+add_executable(udp
+    src/udp.cc
+)
+
+target_link_libraries(udp
+    ${GST_LIBRARIES}
+    ${GSTAPP_LIBRARIES}
+    ${GSTRTSP_LIBRARIES}  # Added this line
+    ${GLIB_LIBRARIES}
+    ${GFLAGS_LIBRARIES}
+    ${JSONCPP_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    ${realsense2_LIBRARY}
+    nvbufsurface
+    nvdsgst_meta
+    nvds_meta
+    nvds_utils
+)
